@@ -1,0 +1,6 @@
+/bin
+/data
+/lib
+/src/__pycache__
+/temp
+/weights
