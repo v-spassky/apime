@@ -1,4 +1,5 @@
 > **Note**
+>
 > This project is still in process...
 
 ## Motivation
@@ -10,7 +11,7 @@ Once stumbled upon [this tweet](https://twitter.com/litavrinm/status/15270205711
 ## Tech stack
 
 - Keras with all the underlying dependencies (Tensorflow, Scipy, PIL);
-- FastAPI with Uvicorn web server.
+- FastAPI with Uvicorn web server inside a Docker container.
 
 ## Demonstration
 
