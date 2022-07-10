@@ -4,7 +4,6 @@ from fastapi import (
     HTTPException,
     status,
 )
-import requests
 import keras
 import tensorflow
 import src.utils

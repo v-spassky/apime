@@ -76,3 +76,11 @@ isanime
 Run server:
 
     .../isanime$ uvicorn src.server:app
+
+Generate Keras model:
+
+    .../isanime$  python src/utils.py generate-model <output_file_name>
+
+Download random inages:
+
+    .../isanime$  python src/utils.py download-random-images <how_much> <target_folder>

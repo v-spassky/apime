@@ -1,4 +1,4 @@
-from pyparsing import DebugExceptionAction
+import sys
 import requests
 import PIL
 import keras
@@ -13,6 +13,10 @@ from keras import backend as K
 """
 This module contains all the auxiliary functions that handle 
 creation and usage of a Keras model, and configuration thereof.
+
+Provides simple CLI with the following options:
+    - python src/utils.py generate-model <output_file_name>
+    - python src/utils.py download-random-images <how_much> <target_folder>
 """
 
 IMG_WIGTH, IMG_HEIGHT = 150, 150
@@ -26,9 +30,10 @@ PREDICTION_THRESH = 1e-16
 DEBUG = True
 
 
-def generate_model() -> None:
+def generate_model(output_name: str) -> None:
     """
     Generates Keras model according to the global variables configurations.
+    Saves it to the 'models' folder.
     """
 
     if K.image_data_format() == 'channels_first':
@@ -56,15 +61,18 @@ def generate_model() -> None:
     model.add(Dense(1))
     model.add(Activation('sigmoid'))
 
-    model.compile(loss='binary_crossentropy',
-                  optimizer='rmsprop',
-                  metrics=['accuracy'])
+    model.compile(
+        loss='binary_crossentropy',
+        optimizer='rmsprop',
+        metrics=['accuracy'],
+    )
 
     train_datagen = ImageDataGenerator(
         rescale=1. / 255,
         shear_range=0.2,
         zoom_range=0.2,
-        horizontal_flip=True)
+        horizontal_flip=True,
+    )
 
     test_datagen = ImageDataGenerator(rescale=1. / 255)
 
@@ -72,22 +80,25 @@ def generate_model() -> None:
         TRAIN_DATA_DIR,
         target_size=(IMG_WIGTH, IMG_HEIGHT),
         batch_size=BATCH_SIZE,
-        class_mode='binary')
+        class_mode='binary',
+    )
 
     validation_generator = test_datagen.flow_from_directory(
         VALIDATION_DATA_DIR,
         target_size=(IMG_WIGTH, IMG_HEIGHT),
         batch_size=BATCH_SIZE,
-        class_mode='binary')
+        class_mode='binary',
+    )
 
     model.fit_generator(
         train_generator,
         steps_per_epoch=TRAIN_SAMPLES_NMB // BATCH_SIZE,
         epochs=EPOCHS,
         validation_data=validation_generator,
-        validation_steps=VALIDATION_SAMPLES_NMB // BATCH_SIZE)
+        validation_steps=VALIDATION_SAMPLES_NMB // BATCH_SIZE,
+    )
 
-    model.save('models/keras_model_v4.h5')
+    model.save(f'models/{output_name}.h5')
 
 
 def is_anime(image: PIL.Image, model: keras.models.Sequential) -> bool:
@@ -130,3 +141,17 @@ def download_random_images(how_much: int, folder_path: str) -> None:
             with open(file_path, 'wb') as f:
                 print('saving: ' + file_name)
                 f.write(response.content)
+
+
+if __name__ == '__main__':
+
+    command = sys.argv[1]
+
+    if command == 'generate-model':
+        generate_model(output_name=sys.argv[2])
+
+    elif command == 'download-random-images':
+        download_random_images(how_much=sys.argv[2], folder_path=sys.argv[3])
+
+    else:
+        print(f'No such command: {command}.')
