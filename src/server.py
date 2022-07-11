@@ -1,3 +1,4 @@
+from configparser import ConfigParser
 from fastapi import (
     FastAPI,
     Request,
@@ -10,10 +11,18 @@ import src.utils
 
 """
 This module manages handling HTTP requests.
+
+Launched form the root folder like this:
+.../isanime$ uvicorn src.server:app
 """
 
+config = ConfigParser()
+config.read('config.ini')
+
+keras_model_name = config['SERVER']['MODEL_NAME']
+model = keras.models.load_model(f'models/{keras_model_name}.h5')
+
 app = FastAPI()
-model = keras.models.load_model('models/third_try.h5')
 
 
 @app.post("/is_it_anime")
@@ -30,12 +39,14 @@ async def is_it_anime(request: Request):
     if not picture_url:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f'No picture URL detected in the request`s headres.')
+            detail='No picture URL detected in the request`s headres.',
+        )
 
     try:
         image = tensorflow.keras.preprocessing.image.load_img(
             tensorflow.keras.utils.get_file(origin=picture_url),
-            target_size=(150, 150))
+            target_size=(150, 150),
+        )
 
         if src.utils.is_anime(image, model):
             return 'Yes'
@@ -45,4 +56,5 @@ async def is_it_anime(request: Request):
     except ValueError:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f'Could not get the image.')
+            detail='Could not get the image.',
+        )

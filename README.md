@@ -19,7 +19,13 @@ Once stumbled upon [this tweet](https://twitter.com/litavrinm/status/15270205711
 
 ## Usage guide
 
-...
+Send a POST request to `/is_it_anime` with the `pfp-url` header containing link to the image of interest. 
+
+Possible responses:
+
+- `200 { 'Yes' }`
+- `200 { 'No' }`
+- `400 { details: 'Error message...' }`
 
 ## Project file structure
 
@@ -62,25 +68,30 @@ isanime
 │ ├── ...
 │ ├── ...
 │ └── ...
-├─ models             # Stores generated models
+├─ models             # Stores generated .h5 models
 │ ├── ...
 │ ├── ...
 │ └── ...
 └─ src
-├── server.py
-└── utils.py
+  ├── __pycache__
+  │     ├── ...
+  │     ├── ...
+  │     └── ...
+  ├── __init__.py
+  ├── server.py
+  └── utils.py
 ```
 
 ## Development notes
 
-Run server:
+Run server: 
 
-    .../isanime$ uvicorn src.server:app
+`.../isanime$ uvicorn src.server:app`
 
-Generate Keras model:
+Generate Keras model: 
 
-    .../isanime$  python src/utils.py generate-model <output_file_name>
+`.../isanime$ python src/utils.py generate-model <output_file_name>`
 
-Download random inages:
+Download random inages: 
 
-    .../isanime$  python src/utils.py download-random-images <how_much> <target_folder>
+`.../isanime$ python src/utils.py download-random-images <how_much> <target_folder>`

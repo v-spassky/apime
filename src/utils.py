@@ -1,4 +1,5 @@
 import sys
+from configparser import ConfigParser
 import requests
 import PIL
 import keras
@@ -17,17 +18,12 @@ creation and usage of a Keras model, and configuration thereof.
 Provides simple CLI with the following options:
     - python src/utils.py generate-model <output_file_name>
     - python src/utils.py download-random-images <how_much> <target_folder>
+
+    * commands must be ran from the root folder (.../isanime$ <command>)
 """
 
-IMG_WIGTH, IMG_HEIGHT = 150, 150
-TRAIN_DATA_DIR = 'data/train'
-VALIDATION_DATA_DIR = 'data/validation'
-TRAIN_SAMPLES_NMB = 700
-VALIDATION_SAMPLES_NMB = 120
-EPOCHS = 25
-BATCH_SIZE = 16
-PREDICTION_THRESH = 1e-16
-DEBUG = True
+config = ConfigParser()
+config.read('config.ini')
 
 
 def generate_model(output_name: str) -> None:
@@ -37,9 +33,17 @@ def generate_model(output_name: str) -> None:
     """
 
     if K.image_data_format() == 'channels_first':
-        input_shape = (3, IMG_WIGTH, IMG_HEIGHT)
+        input_shape = (
+            3,
+            config['MODEL_GENERATION']['IMG_WIDTH'],
+            config['MODEL_GENERATION']['IMG_HEIGHT'],
+        )
     else:
-        input_shape = (IMG_WIGTH, IMG_HEIGHT, 3)
+        input_shape = (
+            config['MODEL_GENERATION']['IMG_WIDTH'],
+            config['MODEL_GENERATION']['IMG_HEIGHT'],
+            3,
+        )
 
     model = Sequential()
     model.add(Conv2D(32, (3, 3), input_shape=input_shape))
@@ -77,25 +81,39 @@ def generate_model(output_name: str) -> None:
     test_datagen = ImageDataGenerator(rescale=1. / 255)
 
     train_generator = train_datagen.flow_from_directory(
-        TRAIN_DATA_DIR,
-        target_size=(IMG_WIGTH, IMG_HEIGHT),
-        batch_size=BATCH_SIZE,
+        config['MODEL_GENERATION']['TRAIN_DATA_DIR'],
+        target_size=(
+            config['MODEL_GENERATION']['IMG_WIDTH'],
+            config['MODEL_GENERATION']['IMG_HEIGHT'],
+        ),
+        batch_size=config['MODEL_GENERATION']['BATCH_SIZE'],
         class_mode='binary',
     )
 
     validation_generator = test_datagen.flow_from_directory(
-        VALIDATION_DATA_DIR,
-        target_size=(IMG_WIGTH, IMG_HEIGHT),
-        batch_size=BATCH_SIZE,
+        config['MODEL_GENERATION']['VALIDATION_DATA_DIR'],
+        target_size=(
+            config['MODEL_GENERATION']['IMG_WIDTH'],
+            config['MODEL_GENERATION']['IMG_HEIGHT'],
+        ),
+        batch_size=config['MODEL_GENERATION']['BATCH_SIZE'],
         class_mode='binary',
     )
 
     model.fit_generator(
         train_generator,
-        steps_per_epoch=TRAIN_SAMPLES_NMB // BATCH_SIZE,
-        epochs=EPOCHS,
+        steps_per_epoch=(
+            config['MODEL_GENERATION']['TRAIN_SAMPLES_NMB']
+            //
+            config['MODEL_GENERATION']['BATCH_SIZE']
+        ),
+        epochs=config['MODEL_GENERATION']['EPOCHS'],
         validation_data=validation_generator,
-        validation_steps=VALIDATION_SAMPLES_NMB // BATCH_SIZE,
+        validation_steps=(
+            config['MODEL_GENERATION']['VALIDATION_SAMPLES_NMB']
+            //
+            config['MODEL_GENERATION']['BATCH_SIZE']
+        ),
     )
 
     model.save(f'models/{output_name}.h5')
@@ -112,10 +130,10 @@ def is_anime(image: PIL.Image, model: keras.models.Sequential) -> bool:
     img_array = tensorflow.image.per_image_standardization(img_array)
 
     predictions = model.predict(img_array)
-    if DEBUG:
+    if config['ENVIRONMENT']['DEBUG']:
         print(f'Predictions vector: {predictions}')
 
-    if predictions[0][0] < PREDICTION_THRESH:
+    if predictions[0][0] < config['MODEL_GENERATION']['PREDICTION_THRESH']:
         is_anime = True
     else:
         is_anime = False
@@ -139,19 +157,29 @@ def download_random_images(how_much: int, folder_path: str) -> None:
             file_path = f'{folder_path}/{file_name}'
 
             with open(file_path, 'wb') as f:
-                print('saving: ' + file_name)
+                if config['ENVIRONMENT']['DEBUG']:
+                    print('saving: ' + file_name)
                 f.write(response.content)
 
 
 if __name__ == '__main__':
 
-    command = sys.argv[1]
+    print(config['MODEL_GENERATION']['IMG_HEIGHT'])
 
-    if command == 'generate-model':
-        generate_model(output_name=sys.argv[2])
+    try:
+        command = sys.argv[1]
 
-    elif command == 'download-random-images':
-        download_random_images(how_much=sys.argv[2], folder_path=sys.argv[3])
+        if command == 'generate-model':
+            generate_model(output_name=sys.argv[2])
 
-    else:
-        print(f'No such command: {command}.')
+        elif command == 'download-random-images':
+            download_random_images(
+                how_much=sys.argv[2],
+                folder_path=sys.argv[3],
+            )
+
+        else:
+            print(f'No such command: {command}.')
+
+    except IndexError:
+        print('No command has been provided.')
