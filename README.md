@@ -35,6 +35,7 @@ Since pretty big part of the project files is gitingored here is a full presenta
 isanime
 │
 ├─ .gitignore
+├─ config.ini
 ├─ LICENSE
 ├─ pyvenv.cfg
 ├─ README.md
@@ -95,3 +96,47 @@ Generate Keras model:
 Download random inages: 
 
 `.../isanime$ python src/utils.py download-random-images <how_much> <target_folder>`
+
+## Deployment backlog
+
+SSH into the EC2 instance:
+
+`ssh -i "<key_file>.pem" ubuntu@<dns_name>`
+
+Update package information and install Pyton, pip and Nginx:
+
+`ubuntu@<private-ip>:~$ sudo apt-get update && sudo apt install -y python3-pip nginx`
+
+Configure Nginx like this:
+
+`ubuntu@<private-ip>:~$ sudo nano /etc/nginx/sites-enabled/isanime_server`
+
+```
+server {
+        listen 80;
+        server_name <public-ip>;
+        location / {
+                proxy_pass http://127.0.0.1:8000;
+        }
+}
+```
+
+... and then resart Nginx:
+
+`ubuntu@<private-ip>:~$ sudo service nginx restart`
+
+Clone the repo from Github:
+
+`ubuntu@<private-ip>:~$ git clone https://github.com/v-spassky/isanime.git`
+
+Cd into the project folder:
+
+`ubuntu@<private-ip>:~$ cd isanime/`
+
+Install dependencies:
+
+`ubuntu@<private-ip>:~/isanime$ pip install -r requirements.txt`
+
+Run the application:
+
+`ubuntu@<private-ip>:~/isanime$ uvicorn src.server:app`
