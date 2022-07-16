@@ -1,4 +1,7 @@
+/__pycache__
+/.pytest_cache
 /bin
 /data
 /lib
 /src/__pycache__
+/src/.pytest_cache

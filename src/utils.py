@@ -35,13 +35,13 @@ def generate_model(output_name: str) -> None:
     if K.image_data_format() == 'channels_first':
         input_shape = (
             3,
-            config['MODEL_GENERATION']['IMG_WIDTH'],
-            config['MODEL_GENERATION']['IMG_HEIGHT'],
+            config.getint('MODEL_GENERATION', 'IMG_WIDTH'),
+            config.getint('MODEL_GENERATION', 'IMG_HEIGHT'),
         )
     else:
         input_shape = (
-            config['MODEL_GENERATION']['IMG_WIDTH'],
-            config['MODEL_GENERATION']['IMG_HEIGHT'],
+            config.getint('MODEL_GENERATION', 'IMG_WIDTH'),
+            config.getint('MODEL_GENERATION', 'IMG_HEIGHT'),
             3,
         )
 
@@ -81,38 +81,38 @@ def generate_model(output_name: str) -> None:
     test_datagen = ImageDataGenerator(rescale=1. / 255)
 
     train_generator = train_datagen.flow_from_directory(
-        config['MODEL_GENERATION']['TRAIN_DATA_DIR'],
+        config.get('MODEL_GENERATION', 'TRAIN_DATA_DIR'),
         target_size=(
-            config['MODEL_GENERATION']['IMG_WIDTH'],
-            config['MODEL_GENERATION']['IMG_HEIGHT'],
+            config.getint('MODEL_GENERATION', 'IMG_WIDTH'),
+            config.getint('MODEL_GENERATION', 'IMG_HEIGHT'),
         ),
-        batch_size=config['MODEL_GENERATION']['BATCH_SIZE'],
+        batch_size=config.getint('MODEL_GENERATION', 'BATCH_SIZE'),
         class_mode='binary',
     )
 
     validation_generator = test_datagen.flow_from_directory(
-        config['MODEL_GENERATION']['VALIDATION_DATA_DIR'],
+        config.get('MODEL_GENERATION', 'VALIDATION_DATA_DIR'),
         target_size=(
-            config['MODEL_GENERATION']['IMG_WIDTH'],
-            config['MODEL_GENERATION']['IMG_HEIGHT'],
+            config.getint('MODEL_GENERATION', 'IMG_WIDTH'),
+            config.getint('MODEL_GENERATION', 'IMG_HEIGHT'),
         ),
-        batch_size=config['MODEL_GENERATION']['BATCH_SIZE'],
+        batch_size=config.getint('MODEL_GENERATION', 'BATCH_SIZE'),
         class_mode='binary',
     )
 
     model.fit_generator(
         train_generator,
         steps_per_epoch=(
-            config['MODEL_GENERATION']['TRAIN_SAMPLES_NMB']
+            config.getint('MODEL_GENERATION', 'TRAIN_SAMPLES_NMB')
             //
-            config['MODEL_GENERATION']['BATCH_SIZE']
+            config.getint('MODEL_GENERATION', 'BATCH_SIZE')
         ),
-        epochs=config['MODEL_GENERATION']['EPOCHS'],
+        epochs=config.getint('MODEL_GENERATION', 'EPOCHS'),
         validation_data=validation_generator,
         validation_steps=(
-            config['MODEL_GENERATION']['VALIDATION_SAMPLES_NMB']
+            config.getint('MODEL_GENERATION', 'VALIDATION_SAMPLES_NMB')
             //
-            config['MODEL_GENERATION']['BATCH_SIZE']
+            config.getint('MODEL_GENERATION', 'BATCH_SIZE')
         ),
     )
 
@@ -130,10 +130,10 @@ def is_anime(image: PIL.Image, model: keras.models.Sequential) -> bool:
     img_array = tensorflow.image.per_image_standardization(img_array)
 
     predictions = model.predict(img_array)
-    if config['ENVIRONMENT']['DEBUG']:
+    if config.getboolean('ENVIRONMENT', 'DEBUG'):
         print(f'Predictions vector: {predictions}')
 
-    if predictions[0][0] < config['MODEL_GENERATION']['PREDICTION_THRESH']:
+    if predictions[0][0] < config.getfloat('MODEL_GENERATION', 'PREDICTION_THRESH'):
         is_anime = True
     else:
         is_anime = False
@@ -157,14 +157,12 @@ def download_random_images(how_much: int, folder_path: str) -> None:
             file_path = f'{folder_path}/{file_name}'
 
             with open(file_path, 'wb') as f:
-                if config['ENVIRONMENT']['DEBUG']:
+                if config.getboolean('ENVIRONMENT', 'DEBUG'):
                     print('saving: ' + file_name)
                 f.write(response.content)
 
 
 if __name__ == '__main__':
-
-    print(config['MODEL_GENERATION']['IMG_HEIGHT'])
 
     try:
         command = sys.argv[1]

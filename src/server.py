@@ -7,7 +7,7 @@ from fastapi import (
 )
 import keras
 import tensorflow
-import src.utils
+from .utils import is_anime
 
 """
 This module manages handling HTTP requests.
@@ -25,7 +25,7 @@ model = keras.models.load_model(f'models/{keras_model_name}.h5')
 app = FastAPI()
 
 
-@app.post("/is_it_anime")
+@app.post('/is_it_anime')
 async def is_it_anime(request: Request):
     """
     Handles HTTP post requests to /is_it_anime.
@@ -48,13 +48,19 @@ async def is_it_anime(request: Request):
             target_size=(150, 150),
         )
 
-        if src.utils.is_anime(image, model):
-            return 'Yes'
+        if is_anime(image, model):
+            return {'conclusion': 'Yes'}
         else:
-            return 'No'
+            return {'conclusion': 'No'}
 
     except ValueError:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail='Could not get the image.',
+        )
+
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail='Sorry! Unknown error occured.',
         )

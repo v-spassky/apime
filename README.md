@@ -23,9 +23,10 @@ Send a POST request to `/is_it_anime` with the `pfp-url` header containing link 
 
 Possible responses:
 
-- `200 { 'Yes' }`
-- `200 { 'No' }`
-- `400 { details: 'Error message...' }`
+- `200 { "conclusion": "Yes" }`
+- `200 { "conclusion": "No" }`
+- `400 { "details": "Error message..." }`
+- `500 { "details": "Error message..." }`
 
 ## Project file structure
 
@@ -96,6 +97,10 @@ Generate Keras model:
 Download random inages: 
 
 `.../isanime$ python src/utils.py download-random-images <how_much> <target_folder>`
+
+Run tests:
+
+`.../isanime$ pytest --ignore=bin --ignore=lib`
 
 ## Deployment backlog
 
