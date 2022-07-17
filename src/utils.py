@@ -127,11 +127,11 @@ def is_anime(image: PIL.Image, model: keras.models.Sequential) -> bool:
 
     img_array = tensorflow.keras.utils.img_to_array(image)
     img_array = tensorflow.expand_dims(img_array, 0)
-    img_array = tensorflow.image.per_image_standardization(img_array)
+    img_array /= 255
 
     predictions = model.predict(img_array)
     if config.getboolean('ENVIRONMENT', 'DEBUG'):
-        print(f'Predictions vector: {predictions}')
+        print(f'Prediction value: {predictions[0][0]}')
 
     if predictions[0][0] < config.getfloat('MODEL_GENERATION', 'PREDICTION_THRESH'):
         is_anime = True

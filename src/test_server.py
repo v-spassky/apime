@@ -6,29 +6,29 @@ This module defines tests for the API.
 """
 
 ANIME_PICS_URLS = [
-    'https://glowmagzine.com/wp-content/uploads/2022/04/Screenshot-2022-04-26-at-2.32.19-PM.png',
-    'https://i.pinimg.com/736x/e1/6e/45/e16e4533befd9e59240ce9a62a43b617.jpg',
-    'https://i.pinimg.com/736x/3f/2f/64/3f2f646ea0a36712ffd4db6f880088a5.jpg',
-    'https://qph.cf2.quoracdn.net/main-qimg-603a70b456b433931e2fbd534710ca95-lq',
-    'https://www.statuspik.com/wp-content/uploads/2020/12/Beautiful-anime-profile-pics.jpg',
-    'https://thypix.com/wp-content/uploads/2021/10/anime-avatar-profile-picture-thypix-124-700x700.jpg',
-    'https://thypix.com/wp-content/uploads/2021/10/grey-anime-profile-picture-thypix-40-700x700.jpg',
-    'https://thypix.com/wp-content/uploads/2021/10/grey-anime-profile-picture-thypix-36-700x700.jpg',
-    'https://i.pinimg.com/originals/22/69/47/226947af00dfe2a773f726d0ad0435e9.jpg',
-    'https://exploringbits.com/wp-content/uploads/2021/11/anime-girl-pfp-2.jpg?ezimgfmt=rs:352x380/rscb3/ng:webp/ngcb3',
+    'https://i.pinimg.com/originals/10/9b/5e/109b5e84fd01c7dc621ce1011b2a96d9.jpg',
+    'https://static.wikia.nocookie.net/evangelion/images/0/0d/OP_C016_rei.jpg/revision/latest/top-crop/width/360/height/360?cb=20171121184144&path-prefix=ru',
+    'https://i.pinimg.com/originals/ae/e2/b4/aee2b41aa6c18317cfab9af184bc2d2e.jpg',
+    'https://64.media.tumblr.com/24a099f06104b248ead01ae15e281375/tumblr_pn36dohkBZ1vm1a59o1_640.jpg',
+    'https://i.pinimg.com/originals/9e/b9/4b/9eb94bf1b0aae8c5a6ddf32d092a64e1.jpg',
+    'https://i.pinimg.com/236x/2c/67/80/2c678002e587299b3511cec86382daf1.jpg',
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTH1Tho9kwiFmUsAzz5mUSE3EOdyx-n1UpbPDnNetLdCiAjteTchS-75nD7fcq4l2V3ciU&usqp=CAU',
+    'https://i.pinimg.com/1200x/31/39/f8/3139f84211ab1498537fda031eb76d10.jpg',
+    'https://b-static.besthdwallpaper.com/my-dress-up-darling-anime-marin-kitagawa-4k-sfondo-3554x1999-89573_53.jpg',
+    'https://i.pinimg.com/474x/56/44/6d/56446d6df6331068c2c02d114f99b672.jpg',
 ]
 
 RANDOM_PICS_URLS = [
-    'https://miro.medium.com/max/1200/1*IC7_pdLtDMqwoqLkTib4JQ.jpeg',
-    'https://urbanmatter.com/chicago/wp-content/uploads/2015/04/Chicago-Architecture.jpg',
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZLQ9aUPQx3hl9nxSnOgL14LXt6GQu30Tm4w&usqp=CAU',
-    'https://e3.365dm.com/21/07/1600x900/skynews-boeing-737-plane_5435020.jpg?20210702173340',
-    'https://cars.usnews.com/pics/size/390x290/images/Auto/izmo/i159614825/2022_honda_accord_sedan_angularfront.jpg',
-    'https://cdn.psychologytoday.com/sites/default/files/styles/article-inline-half-caption/public/field_blog_entry_images/2018-09/shutterstock_648907024.jpg?itok=0hb44OrI',
-    'https://api.time.com/wp-content/uploads/2019/12/time-person-of-the-year-joe-biden-portrait.jpg?w=700&w=700',
-    'https://image.shutterstock.com/image-photo/portrait-beautiful-mature-blonde-bearded-260nw-721917490.jpg',
-    'https://img.freepik.com/free-photo/portrait-white-man-isolated_53876-40306.jpg?w=2000',
-    'https://www.westend61.de/images/0001534567pw/handsome-young-man-smiling-on-sunny-day-UUF23064.jpg',
+    'https://i.pinimg.com/736x/6b/f0/7a/6bf07a463c434f56e8a1bb860924863d--christian-bale-celebrity-portraits.jpg',
+    'https://play-lh.googleusercontent.com/q1A3iAYUJI6wxOWI7iLvmjAx9rb53QiKUqB1wIfiPzkihWbYgqs_uuDrls45ayKqsUg',
+    'https://media.wired.com/photos/62b25f4c18e6fafaa97a6477/master/pass/Air-Serbia-Plane-Russian-Sanctions-Safety-Hazard-Business-1239498184.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Alexei_Navalny_marching_in_2017_%28cropped_2%29.jpg/250px-Alexei_Navalny_marching_in_2017_%28cropped_2%29.jpg',
+    'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/golden-retriever-royalty-free-image-506756303-1560962726.jpg?crop=0.672xw:1.00xh;0.166xw,0&resize=640:*',
+    'http://images2.minutemediacdn.com/image/upload/c_crop,h_1193,w_2121,x_0,y_64/f_auto,q_auto,w_1100/v1565279671/shape/mentalfloss/578211-gettyimages-542930526.jpg',
+    'https://efi.int/sites/default/files/2020-12/placeholder.jpeg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/City_of_London_skyline_from_London_City_Hall_-_Sept_2015_-_Crop_Aligned.jpg/1200px-City_of_London_skyline_from_London_City_Hall_-_Sept_2015_-_Crop_Aligned.jpg',
+    'https://img.freepik.com/free-photo/young-and-beautiful-woman-in-pink-warm-sweater-natural-look-smiling-portrait-on-isolated-long-hair_285396-896.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/President_Barack_Obama_%28cropped%29.jpg/1200px-President_Barack_Obama_%28cropped%29.jpg',
 ]
 
 FAULTY_URLS = [

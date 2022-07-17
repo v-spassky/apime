@@ -102,6 +102,14 @@ Run tests:
 
 `.../isanime$ pytest --ignore=bin --ignore=lib`
 
+Send request from commnad line:
+
+```
+curl -XPOST -H \
+'pfp-url: <url>' \
+'http://localhost:8000/is_it_anime'
+```
+
 ## Deployment backlog
 
 SSH into the EC2 instance:
