@@ -19,7 +19,7 @@ Launched form the root folder like this:
 config = ConfigParser()
 config.read('config.ini')
 
-keras_model_name = config['SERVER']['MODEL_NAME']
+keras_model_name = config.get('SERVER', 'MODEL_NAME')
 model = keras.models.load_model(f'models/{keras_model_name}.h5')
 
 app = FastAPI()
@@ -45,7 +45,10 @@ async def is_it_anime(request: Request):
     try:
         image = tensorflow.keras.preprocessing.image.load_img(
             tensorflow.keras.utils.get_file(origin=picture_url),
-            target_size=(150, 150),
+            target_size=(
+                config.getint('MODEL_GENERATION', 'IMG_WIDTH'),
+                config.getint('MODEL_GENERATION', 'IMG_HEIGHT'),
+            ),
         )
 
         if is_anime(image, model):
