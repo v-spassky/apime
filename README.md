@@ -2,7 +2,7 @@
 
 Once stumbled upon [this tweet](https://twitter.com/litavrinm/status/1527020571141320705) I decided to create a simple API that tells whether given image is anime or not.
 
-<img src="files_for_readme/the_tweet.jpg" width="600">
+<img src="files_for_readme/the_tweet.jpg" width="600" style="max-width: 100%;">
 
 ## Tech stack
 
@@ -24,11 +24,11 @@ Possible responses:
 
 Trying out the API with [this image](https://pbs.twimg.com/media/D_jHn2fW4AAQlsz.jpg):
 
-<img src="files_for_readme/demo_1.gif">
+<img src="files_for_readme/demo_1.gif" style="max-width: 100%;">
 
 ... and with an image from ['This person does not exist'](https://this-person-does-not-exist.com/en):
 
-<img src="files_for_readme/demo_2.gif">
+<img src="files_for_readme/demo_2.gif" style="max-width: 100%;">
 
 ## Project file structure
 
