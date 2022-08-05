@@ -5,6 +5,7 @@ from fastapi import (
     HTTPException,
     status,
 )
+from fastapi.responses import FileResponse
 import keras
 import tensorflow
 from .utils import is_anime
@@ -13,7 +14,7 @@ from .utils import is_anime
 This module manages handling HTTP requests.
 
 Launched form the root folder like this:
-.../isanime$ uvicorn src.server:app
+.../apime$ uvicorn src.server:app --host 0.0.0.0 --port 5000
 """
 
 config = ConfigParser()
@@ -23,6 +24,24 @@ keras_model_name = config.get('SERVER', 'MODEL_NAME')
 model = keras.models.load_model(f'models/{keras_model_name}.h5')
 
 app = FastAPI()
+
+
+@app.get('/')
+async def read_index():
+    """
+    Serves home page on the root URL path.
+    """
+
+    return FileResponse('static/index.html')
+
+
+@app.get('/favicon.ico')
+async def read_index():
+    """
+    Serves favicon to the browser tab.
+    """
+
+    return FileResponse('static/favicon.ico')
 
 
 @app.post('/is_it_anime')

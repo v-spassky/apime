@@ -35,7 +35,7 @@ Trying out the API with [this image](https://pbs.twimg.com/media/D_jHn2fW4AAQlsz
 Since pretty big part of the project files is gitingored here is a full presentation of it for context.
 
 ```
-isanime
+apime
 │
 ├─ __init__.py
 ├─ .gitignore
@@ -62,7 +62,7 @@ isanime
 │ │  │  ├── ...
 │ │  │  ├── ...
 │ │  │  └── ...
-│ │  └── not_anime
+│ │  └── random
 │ │     ├── ...
 │ │     ├── ...
 │ │     └── ...
@@ -71,7 +71,7 @@ isanime
 │ │  │  ├── ...
 │ │  │  ├── ...
 │ │  │  └── ...
-│ │  └── not_anime
+│ │  └── random
 │ │     ├── ...
 │ │     ├── ...
 │ │     └── ...
@@ -104,24 +104,54 @@ isanime
 
  - Run server: 
 
-`.../isanime$ uvicorn src.server:app`
+`.../apime$ uvicorn src.server:app --port 5000 --reload --reload-exclude bin/* --reload-exclude lib/* -reload-exclude *.html`
 
 - Generate Keras model: 
 
-`.../isanime$ python src/utils.py generate-model <output_file_name>`
+`.../apime$ python src/utils.py generate-model <output_file_name>`
 
 - Download random inages: 
 
-`.../isanime$ python src/utils.py download-random-images <how_much> <target_folder>`
+`.../apime$ python src/utils.py download-random-images <how_much> <target_folder>`
+
+- Feed the test images into the model and see results:
+
+`python src/utils.py get-model-statistics`
 
 - Run tests:
 
-`.../isanime$ pytest --ignore=bin --ignore=lib`
+`.../apime$ pytest --ignore=bin --ignore=lib`
 
 - Send request from commnad line:
 
 ```
 curl -XPOST -H \
 'pfp-url: <url>' \
-'http://localhost:8000/is_it_anime'
+'http://localhost:5000/is_it_anime'
 ```
+
+## Deployment notes
+
+SSH into an EC2 instance:
+
+`ssh -i "<key_file>" <public_dns_name>`
+
+Install Python and pip:
+
+`...`
+
+Clone git repo:
+
+`git clone https://github.com/v-spassky/apime.git`
+
+Cd into the project folder:
+
+`cd apime/`
+
+Install dependencies:
+
+`pip install -r requirements.txt`
+
+Run server:
+
+`uvicorn src.server:app --host 0.0.0.0 --port 5000`

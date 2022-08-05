@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=B612+Mono&display=swap" rel="stylesheet">
+</head>
+<body class="min-h-screen w-full flex justify-center items-center
+             bg-stone-200 p-12"
+      style="font-family: 'B612 Mono', monospace;">
+    <main class="text-cyan-800 space-y-4">
+        <h1 class="text-3xl font-bold select-none">
+            apime.app <span class="text-xs bg-red-200 p-1">beta</span>
+        </h1>
+        <p>
+            This is an image classification API<br>
+            for predicting if a given picture is anime or not. 
+        </p>
+        <p>
+            Currently the model has about 85% accuracy.
+        </p>
+        <p>
+            Send an <span class="bg-stone-300 bg-opacity-70">HTTP POST</span> request to the <span class="bg-stone-300 bg-opacity-70">/is_it_anime</span> route<br>
+            with the <span class="bg-stone-300 bg-opacity-70">'pfp-url'</span> header containing a link to the image of interest.
+        </p>
+        <p>
+            The answer will be either <span class="bg-stone-300 bg-opacity-70">200 { "conclusion": "Yes"/"No" }</span><br>
+            or <span class="bg-stone-300 bg-opacity-70">400/500 { "details": "Error message..." }</span>.
+        </p>
+        <ol >
+            <li>
+                • <a href="https://github.com/v-spassky/apime" class="underline text-sky-400">See source code and readme</a>
+            </li>
+            <li>
+                • <a href="https://web.postman.co/workspace/My-Workspace~cccfe620-525e-4c7b-8c8f-71d58e331516/request/20540042-796cd913-842f-4d25-8cc0-2583f9a35eb9" class="underline text-sky-400">Try it on Postman</a>
+            </li>
+            <li>
+                • <a href="https://t.me/literally_insomnia" class="underline text-sky-400">Contact the author</a>
+            </li>
+        </ol>
+    </main>
+</body>
