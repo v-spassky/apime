@@ -136,9 +136,17 @@ SSH into an EC2 instance:
 
 `ssh -i "<key_file>" <public_dns_name>`
 
-Install Python and pip:
+Install Python, pip and python-venv:
 
-`...`
+`sudo apt update`
+
+`sudo apt install software-properties-common`
+
+`sudo add-apt-repository ppa:deadsnakes/ppa`
+
+`sudo apt install python3.8`
+
+`apt-get install python3.8-venv`
 
 Clone git repo:
 
@@ -148,10 +156,70 @@ Cd into the project folder:
 
 `cd apime/`
 
+Create and enter virtual environment:
+
+`python 3.8 -m venv .`
+
+`source bin/activate`
+
 Install dependencies:
 
 `pip install -r requirements.txt`
 
+Install Nginx:
+
+`sudo apt install nginx`
+
+Configure Nginx:
+
+`sudo nano /etc/nginx/sites-enabled/apimeconf`
+
+```
+server {
+
+    listen 443 ssl;
+
+    ssl_certificate <path_to_cert_file>;
+
+    ssl_certificate_key <path_to_private_key>;
+
+    server_name <ec2_instance_public_dns_name> <ec2_instance_public_ip> apime.app;
+
+    location / {
+
+        proxy_pass_request_headers on;
+
+        proxy_headers_hash_bucket_size 1024;
+
+        proxy_headers_hash_max_size 4048;
+
+        proxy_pass http://127.0.0.1:5000;
+
+    }
+
+}
+```
+
+Increase DNS name length:
+
+`sudo nano /etc/nginx/nginx.conf`
+
+Uncomment:
+
+`server_names_hash_bucket_size 64;`
+
+Restart Nginx:
+
+`sudo service nginx restart`
+
 Run server:
 
-`uvicorn src.server:app --host 0.0.0.0 --port 5000`
+`nohup uvicorn src.server:app --host 127.0.0.1 --port 5000 &`
+
+Find uvicorn process:
+
+`ps -aux | grep uvicorn`
+
+Kill a process:
+
+`sudo kill -9 <pid>`

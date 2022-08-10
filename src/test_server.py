@@ -10,7 +10,6 @@ from .samples import (
 This module defines tests for the API.
 """
 
-
 client = TestClient(app)
 
 
