@@ -27,7 +27,7 @@ app = FastAPI()
 
 
 @app.get('/')
-async def read_index():
+async def home():
     """
     Serves home page on the root URL path.
     """
@@ -36,7 +36,7 @@ async def read_index():
 
 
 @app.get('/favicon.ico')
-async def read_index():
+async def get_favicon():
     """
     Serves favicon to the browser tab.
     """

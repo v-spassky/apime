@@ -104,7 +104,7 @@ apime
 
  - Run server: 
 
-`.../apime$ uvicorn src.server:app --port 5000 --reload --reload-exclude bin/* --reload-exclude lib/* -reload-exclude *.html`
+`.../apime$ uvicorn src.server:app`
 
 - Generate Keras model: 
 
@@ -146,7 +146,7 @@ Install Python, pip and python-venv:
 
 `sudo apt install python3.8`
 
-`apt-get install python3.8-venv`
+`sudo apt install python3.8-venv`
 
 Clone git repo:
 
