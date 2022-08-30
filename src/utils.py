@@ -1,6 +1,9 @@
 import sys
+import os
+import glob
 import statistics
 from configparser import ConfigParser
+import concurrent.futures
 import requests
 import PIL
 import keras
@@ -223,26 +226,77 @@ def get_model_statistics():
 def download_random_images(
     how_much: int,
     folder_path: str,
-    initial_index: int = 1,
+    initial_index: int,
 ) -> None:
     """
     Downloads how_much images into folder_path.
     """
 
-    for i in range(1, how_much+1):
+    image_names = [
+        f'not_anime_{i}.jpg' for i in range(initial_index, how_much+initial_index)
+    ]
 
-        url = 'https://picsum.photos/150/150/?random'
+    def download_image(file_name) -> None:
+        """
+        ...
+        """
+
+        w = config.getint('MODEL_GENERATION', 'IMG_WIDTH')
+        h = config.getint('MODEL_GENERATION', 'IMG_HEIGHT')
+
+        url = f'https://picsum.photos/{w}/{h}/?random'
         response = requests.get(url)
 
         if response.status_code == 200:
 
-            file_name = f'not_anime_{i+initial_index-1}.jpg'
             file_path = f'{folder_path}/{file_name}'
 
             with open(file_path, 'wb') as f:
-                if config.getboolean('ENVIRONMENT', 'DEBUG'):
-                    print(f'Saving {file_name} ...')
+                print(f'Saving {file_name} ...')
                 f.write(response.content)
+
+    with concurrent.futures.ThreadPoolExecutor(how_much // 100 + 1) as executor:
+        executor.map(download_image, image_names)
+
+
+def filler_unsuitable_images(dirpath: str, remove=False) -> None:
+    """
+    ...
+    """
+
+    if remove:
+        print(f'Going to remove unsuitable images in the {dirpath} folder...')
+    else:
+        print(f'Going to list unsuitable images in the {dirpath} folder...')
+
+    def filter_single_image(path):
+        """
+        ...
+        """
+
+        with PIL.Image.open(path) as img:
+            w, h = img.size
+            ar = w / h
+
+            if w < 200 or h < 200 or 0.33 > ar > 3:
+                print(
+                    f'Image {path} has {w=}, {h=}, {ar=} and is for removal.'
+                )
+                if remove:
+                    os.remove(path)
+                    print(f'{path} removed.')
+
+    image_paths = glob.glob(f'{dirpath}/*.jpg')
+    image_paths.extend(glob.glob(f'{dirpath}/*.jpeg'))
+    image_paths.extend(glob.glob(f'{dirpath}/*.png'))
+    print('Found such image paths:')
+    print(*image_paths[:5], sep='\n')
+    print('...')
+    print(*image_paths[len(image_paths)-5:], sep='\n')
+    print(f'Total: {len(image_paths)}')
+
+    with concurrent.futures.ThreadPoolExecutor(len(image_paths) // 100 + 1) as executor:
+        executor.map(filter_single_image, image_paths)
 
 
 if __name__ == '__main__':
@@ -262,6 +316,12 @@ if __name__ == '__main__':
 
         elif command == 'get-model-statistics':
             get_model_statistics()
+
+        elif command == 'filler-unsuitable-images':
+            filler_unsuitable_images(
+                dirpath=sys.argv[2],
+                remove='--remove' in sys.argv,
+            )
 
         else:
             print(f'No such command: {command}.')
